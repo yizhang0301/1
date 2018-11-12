@@ -1,0 +1,49 @@
+
+#include <SFML/Graphics.hpp>
+#include <vector>
+
+
+
+class Group : public sf::Drawable {
+public:
+	
+	Group()
+		: m_drawables{}
+	{
+	}
+
+	
+	virtual ~Group() = default;
+
+	
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+	{
+		for (const auto& drawable : m_drawables) {
+			target.draw(drawable, states);
+		}
+	}
+
+	
+	const sf::Drawable& operator[](std::size_t index)
+	{
+		return m_drawables[index];
+	}
+
+	std::size_t push_back(const sf::Drawable& drawable)
+	{
+		m_drawables.push_back(drawable);
+		return m_drawables.size() - 1;
+	}
+
+	
+	const sf::Drawable& pop_back()
+	{
+		const auto& drawable = m_drawables.back();
+		m_drawables.pop_back();
+		return drawable;
+	}
+
+private:
+	
+	std::vector<std::reference_wrapper<const sf::Drawable>> m_drawables;
+};
